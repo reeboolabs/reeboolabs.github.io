@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://reebo0.github.io/sitemap.xml
+Sitemap: https://reeboolabs.com/sitemap.xml
