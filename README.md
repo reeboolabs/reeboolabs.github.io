@@ -1,4 +1,4 @@
-# reebo0.github.io
+# reeboolabs.com (repo REEBO0/reebo0.github.io)
 
 Static GitHub Pages site for REEBOO Labs.
 
@@ -9,14 +9,12 @@ Static GitHub Pages site for REEBOO Labs.
 | `/assets/` | CSS, JS, self-hosted Outfit font (OFL, `assets/fonts/OFL.txt`), brand images, pack covers (our own itch.io cover art, webp) |
 | `/sarfi/`, `/nanieh/` | App home and privacy pages. Do not change |
 | `/google81c1f74d41483d65.html` | Search Console verification. Keep |
-| `robots.txt`, `sitemap.xml`, `site.webmanifest`, favicons | Site metadata |
+| `robots.txt`, `sitemap.xml`, `site.webmanifest`,## Domain (reeboolabs.com)
+The base URL is **https://reeboolabs.com/** (`BASE` in `../tools/build_site.py`, `CNAME`, `sitemap.xml`, `robots.txt`).
+https://reebo0.github.io/ 301-redirects here. Store links use **https://reeboolabs.itch.io/<slug>**
+(the itch store was renamed from reebo0.itch.io on 2026-10-20; old links 302-redirect).
 
-## Domain switch (reeboolabs.com)
-The base URL is **https://reebo0.github.io/** for now. When DNS for reeboolabs.com is connected, switch it:
-1. In `../tools/build_site.py` set `BASE = "https://reeboolabs.com/"`, run `python -I build_site.py`.
-2. Update `sitemap.xml` (`<loc>`) and `robots.txt` (`Sitemap:`).
-3. Add the `CNAME` file (`reeboolabs.com`) and set the custom domain + "Enforce HTTPS" in the repo's Pages settings.
-   No CNAME is committed on purpose until DNS is ready.
+purpose until DNS is ready.
 
 ## Dated content
 - Pixel VFX Mega Pack launch sale ($6 until 2026-10-28): the line is in the HTML with `hidden` and is shown by JS
