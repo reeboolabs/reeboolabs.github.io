@@ -541,3 +541,10 @@ html.lenis, html.lenis body { height: auto; }
 .mailbox__opts .btn { padding: 4px 16px; }
 @media (max-width: 480px) { .mailbox { padding: 24px 20px; } .mailbox__opts .btn { flex: 1 1 100%; justify-content: center; } }
 .mailbox__copy { padding: 4px 18px; min-width: 132px; justify-content: center; }
+
+/* Footer links with brand icons (icons: Simple Icons, CC0; envelope drawn in-house) */
+.footer__links { align-items: center; gap: 12px 24px; }
+.footer__link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--n-300); font-size: 0.9375rem; text-decoration: none; transition: color .2s ease; }
+.footer__link:hover, .footer__link:focus-visible { color: var(--cream); }
+.footer__icon { width: 20px; height: 20px; flex: none; }
+@media (prefers-reduced-motion: reduce) { .footer__link { transition: none; } }
