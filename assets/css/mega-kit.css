@@ -232,7 +232,7 @@ html.reveal-ready .mk-bars.is-in .mk-bars__bar { clip-path: inset(0 0 0 0); tran
 .mk-faq__item summary:hover { color: var(--n-300); }
 .mk-faq__item p { padding: 0 0 24px; color: var(--n-300); max-width: 68ch; }
 
-/* Final call */
+/* Closing section */
 .mk-final { padding-block: clamp(112px, 14vw, 192px) clamp(80px, 9vw, 120px); border-top: 1px solid var(--line); overflow: clip; }
 .mk-final .wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
 .mk-final__sprite { grid-column: 10 / span 3; grid-row: 1 / span 4; align-self: center; justify-self: center; }
