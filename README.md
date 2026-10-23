@@ -1,27 +1,35 @@
-# reeboolabs.com (repo REEBO0/reebo0.github.io)
+# reeboolabs.com (repo reeboolabs/reeboolabs.github.io)
 
 Static GitHub Pages site for REEBOO Labs.
 
 | Path | What |
 |---|---|
-| `/index.html` | Company site (v1, branch `site-v1`). Built from `../tools/build_site.py` (outside this repo) with copy from `../docs/copy.md` and `../docs/packs.json` |
+| `/index.html` | Company home page. Edited by hand since 2026-10-21 (the first version came from `../tools/build_site.py`, which is now out of date; do not re-run it without porting the changes) |
+| `/game-dev-mega-kit/` | Game Dev Mega Kit showcase page (from `../tools/mega_kit_page.tpl.html` + `../tools/build_mega_kit_page.py`) |
 | `/404.html` | Designed 404 (GitHub Pages serves it for missing paths) |
 | `/assets/` | CSS, JS, self-hosted Outfit font (OFL, `assets/fonts/OFL.txt`), brand images, pack covers (our own itch.io cover art, webp) |
+| `/assets/img/og-home.png` | Link preview image for the home page (1200 x 630) |
 | `/sarfi/`, `/nanieh/` | App home and privacy pages. Do not change |
 | `/google81c1f74d41483d65.html` | Search Console verification. Keep |
-| `robots.txt`, `sitemap.xml`, `site.webmanifest`,## Domain (reeboolabs.com)
-The base URL is **https://reeboolabs.com/** (`BASE` in `../tools/build_site.py`, `CNAME`, `sitemap.xml`, `robots.txt`).
-https://reebo0.github.io/ 301-redirects here. Store links use **https://reeboolabs.itch.io/<slug>**
-(the itch store was renamed from reebo0.itch.io on 2026-10-20; old links 302-redirect).
+| `robots.txt`, `sitemap.xml`, `site.webmanifest`, `CNAME` | Crawling, install and domain files |
 
-purpose until DNS is ready.
+## Domain
+The base URL is **https://reeboolabs.com/** (`CNAME`, canonical tags, `sitemap.xml`, `robots.txt`).
+Store links use **https://reeboolabs.itch.io/<slug>**.
+
+## When you change something
+- Bump the `?v=` query on the CSS/JS links in every page (format `YYYYMMDD` + letter) so browsers load the new files.
+- Update `<lastmod>` in `sitemap.xml` for the pages you changed.
+- Prices and counts come from the live itch.io pages. Check them there before you edit a number.
 
 ## Dated content
-- Pixel VFX Mega Pack launch sale ($6 until 2026-10-28): the line is in the HTML with `hidden` and is shown by JS
-  only until 2026-10-28 23:59 Oman time. After that date, remove `sale_price`/`sale_ends` from `packs.json` and rebuild.
+- Pixel VFX Mega Pack launch sale ($6 until 2026-10-28): the sale line is in the HTML with `hidden` and is shown by JS
+  only until 2026-10-28 23:59 Oman time. After that date, remove the sale line and set the Pixel VFX Mega Pack offer in
+  the home page JSON-LD back to `"price":"12.00"` without `priceValidUntil`.
+- Pack and sample counts on the home page (40 packs, 40 free samples) were checked on reeboolabs.itch.io on 2026-10-23.
 
 ## Third-party code
 - GSAP 3.15.0 + ScrollTrigger (GreenSock standard no-charge licence) and Lenis 1.3.26 (MIT), from jsDelivr with exact
   versions and SRI hashes. Lenis CSS rules are inlined in `assets/css/site.css`.
-- No trackers, cookies, forms or analytics. CSP is set by a meta tag (GitHub Pages cannot send headers, so
-  `frame-ancestors`, HSTS and `X-Content-Type-Options` cannot be set from here).
+- No trackers, cookies, forms or analytics. CSP and referrer policy are set by meta tags (GitHub Pages cannot send
+  headers, so `frame-ancestors`, HSTS and `X-Content-Type-Options` cannot be set from here).
