@@ -31,7 +31,7 @@
   document.body.append(dlg);
 
   let to = '';
-  const open = (href) => {
+  const fill = (href) => {
     const u = new URL(href);
     to = decodeURIComponent(u.pathname);
     const subject = u.searchParams.get('subject') || 'Hello REEBOO Labs';
@@ -41,6 +41,10 @@
     gmail.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + encodeURIComponent(subject);
     outlook.href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + encodeURIComponent(to) + '&subject=' + encodeURIComponent(subject);
     app.href = href;
+  };
+  fill(links[0].href);
+  const open = (href) => {
+    fill(href);
     dlg.showModal();
     copy.focus();
   };
