@@ -193,7 +193,7 @@ html.header-away .site-header { translate: 0 -100%; }
   transform: scaleX(0); transform-origin: 0 50%; transition: transform 180ms steps(6, end);
 }
 .brand:hover::after, .brand:focus-visible::after { transform: scaleX(1); }
-.brand img { width: 216px; height: auto; }
+.brand img { width: 184px; height: auto; }
 .nav { display: flex; align-items: center; gap: 4px; }
 .nav__list { display: flex; align-items: center; gap: 28px; }
 .nav__list a { font-size: 0.9375rem; color: var(--cream); }
@@ -448,7 +448,7 @@ html.lenis, html.lenis body { height: auto; }
 }
 @media (max-width: 860px) {
   :root { --header-h: 64px; }
-  .brand img { width: 208px; }
+  .brand img { width: 152px; }
   .nav-toggle {
     display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px;
     border: 1px solid color-mix(in srgb, var(--cream) 30%, transparent); border-radius: var(--r-btn);

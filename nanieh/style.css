@@ -22,3 +22,10 @@ li { margin: 6px 0; }
 .features { list-style: none; padding: 0; display: grid; gap: 10px; }
 .features li { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin: 0; }
 footer { margin-top: 48px; color: var(--muted); font-size: 0.95rem; }
+
+/* REEBOO Labs site bar (2026-10-28) */
+.rl-bar { max-width: 720px; margin: 0 auto; padding: 20px 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.rl-brand { display: block; line-height: 0; }
+.rl-brand img { width: 152px; height: auto; }
+.rl-home { font-size: 0.95rem; color: var(--muted); }
+.rl-home:hover, .rl-home:focus-visible { color: var(--link); }
