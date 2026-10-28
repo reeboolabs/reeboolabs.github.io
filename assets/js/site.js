@@ -378,4 +378,15 @@
     });
     enable();
   }
+
+  /* ---------- The hero grid (field.js) loads after the page, so it never competes with the first paint ---------- */
+  const fieldCanvas = document.querySelector('.hero__field[data-src]');
+  if (fieldCanvas && motionOn()) {
+    const loadField = () => {
+      const sc = document.createElement('script');
+      sc.src = fieldCanvas.dataset.src;
+      document.body.append(sc);
+    };
+    if (document.readyState === 'complete') loadField(); else window.addEventListener('load', loadField, { once: true });
+  } else if (fieldCanvas) doc.classList.add('field-off');
 })();
