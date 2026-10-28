@@ -13,7 +13,7 @@
   const onTick = (fn) => tickers.push(fn);
   const runTick = (time) => { for (const fn of tickers) fn(time); };
   if (gsap) {
-    gsap.ticker.add((t) => runTick(t * 1000));
+    gsap.ticker.add(() => runTick(performance.now())); // one clock, in performance.now() units like the input stamps
   } else {
     const loop = (t) => { runTick(t); requestAnimationFrame(loop); };
     requestAnimationFrame(loop);
@@ -220,59 +220,11 @@
     c.addEventListener('pointerleave', () => { if (hoverCard === c) hoverCard = null; });
   });
 
-  /* ---------- Hero pixel field: cells light up where the goggles look ---------- */
-  const canvas = document.querySelector('.hero__field');
-  const field = { ctx: null, w: 0, h: 0, dpr: 1, lx: -999, ly: -999, drawn: '' };
-  const PITCH = 20, INSET = 1.2, SIZE = 17.6, RAD = 3.4;
-  const LEVELS = ['rgba(241,238,230,0.05)', 'rgba(241,238,230,0.09)', 'rgba(241,238,230,0.16)'];
-  const sizeField = () => {
-    if (!canvas) return;
-    const r = canvas.getBoundingClientRect();
-    field.dpr = Math.min(2, window.devicePixelRatio || 1);
-    field.w = r.width; field.h = r.height;
-    canvas.width = Math.round(r.width * field.dpr);
-    canvas.height = Math.round(r.height * field.dpr);
-    field.ctx = canvas.getContext('2d');
-    field.ctx.setTransform(field.dpr, 0, 0, field.dpr, 0, 0);
-    field.drawn = '';
-  };
-  const roundRect = (ctx, x, y, s, r) => {
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(x, y, s, s, r); else ctx.rect(x, y, s, s);
-    ctx.fill();
-  };
-  const drawField = (pt) => {
-    if (!field.ctx) return;
-    const ctx = field.ctx;
-    const hr = canvas.getBoundingClientRect();
-    // the light trails the gaze point, so it travels across the grid cell by cell
-    const tx = pt ? pt.x - hr.left : field.lx, ty = pt ? pt.y - hr.top : field.ly;
-    field.lx += (tx - field.lx) * 0.18;
-    field.ly += (ty - field.ly) * 0.18;
-    const cx = Math.floor(field.lx / PITCH), cy = Math.floor(field.ly / PITCH);
-    const key = cx + ',' + cy;
-    if (key === field.drawn) return;
-    field.drawn = key;
-    ctx.clearRect(0, 0, field.w, field.h);
-    const R = 6;
-    for (let j = -R; j <= R; j++) {
-      for (let i = -R; i <= R; i++) {
-        const d = Math.hypot(i, j);
-        if (d > R) continue;
-        // a stable per-cell hash keeps the lit shape crisp and pixel-like, not a soft blob
-        const h = ((cx + i) * 73856093 ^ (cy + j) * 19349663) >>> 0;
-        const level = d < 2 ? 2 : d < 4 ? 1 : (h % 3 === 0 ? 0 : -1);
-        if (level < 0) continue;
-        ctx.fillStyle = LEVELS[level];
-        roundRect(ctx, (cx + i) * PITCH + INSET, (cy + j) * PITCH + INSET, SIZE, RAD);
-      }
-    }
-  };
-  if (canvas && motionOn()) {
-    sizeField();
-    let rz;
-    window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(sizeField, 150); }, { passive: true });
-  }
+  /* ---------- Hero field (assets/js/field.js) reads the gaze; effects pull the goggles' eyes ---------- */
+  const shared = window.REEBOO = window.REEBOO || {};
+  shared.gaze = null;
+  const fxLook = { x: 0, y: 0, t: -1e9 };
+  document.addEventListener('reeboo:fx', (ev) => { fxLook.x = ev.detail.x; fxLook.y = ev.detail.y; fxLook.t = performance.now(); });
 
   /* ---------- Drive everything from the one clock ---------- */
   onTick((now) => {
@@ -285,10 +237,11 @@
     const foc = focusEl && document.activeElement === focusEl ? center(focusEl) : null;
 
     if (hero && hero.inView) {
-      const t = foc && heroRoot.closest('section').contains(focusEl) ? foc : recent ? ptr : idleTarget(now, looks);
+      const fxNow = now - fxLook.t < 900;
+      const t = fxNow ? fxLook : foc && heroRoot.closest('section').contains(focusEl) ? foc : recent ? ptr : idleTarget(now, looks);
       hero.aim(t);
       hero.step(now);
-      if (field.ctx) drawField(t || (heroRoot ? center(heroRoot.querySelector('svg')) : null));
+      shared.gaze = t ? { x: t.x, y: t.y } : null;
     }
 
     if (rail && rail.inView) {
@@ -315,4 +268,114 @@
       lost.step(now);
     }
   });
+
+  /* ---------- Magnetic buttons: big calls to action lean toward a fine pointer, in 2 px steps ---------- */
+  if (motionOn() && finePointer && gsap) {
+    document.querySelectorAll('[data-magnet]').forEach((el) => {
+      const qx = gsap.quickTo(el, 'x', { duration: 0.35, ease: 'expo.out' });
+      const qy = gsap.quickTo(el, 'y', { duration: 0.35, ease: 'expo.out' });
+      el.addEventListener('pointermove', (ev) => {
+        const r = el.getBoundingClientRect();
+        const dx = ev.clientX - (r.left + r.width / 2), dy = ev.clientY - (r.top + r.height / 2);
+        const c = (v) => Math.max(-12, Math.min(12, Math.round(v / 2) * 2));
+        qx(c(dx * 0.18)); qy(c(dy * 0.3));
+      }, { passive: true });
+      el.addEventListener('pointerleave', () => { qx(0); qy(0); }, { passive: true });
+    });
+  }
+
+  /* ---------- Custom work: one screen changes shape as you read (game, phone, browser) ---------- */
+  const build = document.querySelector('[data-build]');
+  const stage = build && build.querySelector('[data-stage]');
+  const wide = matchMedia('(min-width: 1000px)');
+  if (build && stage && motionOn() && 'IntersectionObserver' in window) {
+    const frame = stage.querySelector('.stage__frame');
+    const items = [...build.querySelectorAll('.build__item')];
+    const layers = {};
+    stage.querySelectorAll('[data-layer]').forEach((l) => { layers[l.dataset.layer] = l; });
+    let state = '', on = false, video = null;
+    const rects = {};
+    const measure = () => {
+      const w = frame.clientWidth, h = frame.clientHeight;
+      const fit = (rw, rh) => { const s = Math.min(w / rw, h / rh); return { w: rw * s, h: rh * s }; };
+      rects.game = fit(16, 9.6);
+      rects.phone = fit(9, 20);
+      rects.browser = fit(16, 11.4);
+      for (const [k, r] of Object.entries(rects)) {
+        const l = layers[k];
+        if (!l) continue;
+        l.style.width = r.w + 'px'; l.style.height = r.h + 'px';
+        l.style.left = (w - r.w) / 2 + 'px'; l.style.top = (h - r.h) / 2 + 'px';
+      }
+      if (state) shape(state);
+    };
+    const shape = (k) => {
+      const r = rects[k], w = frame.clientWidth, h = frame.clientHeight;
+      const x = (w - r.w) / 2, y = (h - r.h) / 2, rad = k === 'phone' ? 34 : 12;
+      frame.style.clipPath = `inset(${y}px ${x}px ${y}px ${x}px round ${rad}px)`;
+    };
+    const setState = (k) => {
+      if (k === state) return;
+      state = k;
+      stage.dataset.state = k;
+      shape(k);
+      for (const [n, l] of Object.entries(layers)) l.classList.toggle('is-on', n === k);
+      items.forEach((it) => it.classList.toggle('is-active', it.dataset.shape === k));
+      if (k === 'game') {
+        if (!video) {
+          const holder = layers.game;
+          video = document.createElement('video');
+          video.muted = true; video.loop = true; video.playsInline = true;
+          video.setAttribute('muted', ''); video.setAttribute('playsinline', ''); video.setAttribute('aria-hidden', 'true');
+          video.preload = 'auto';
+          video.poster = holder.querySelector('img').currentSrc || holder.querySelector('img').src;
+          video.src = '/assets/media/fx/vfx-loop-640.mp4';
+          video.className = 'stage__video';
+          holder.append(video);
+        }
+        const p = video.play(); if (p && p.catch) p.catch(() => {});
+      } else if (video) video.pause();
+    };
+    const enable = () => {
+      if (on || !wide.matches) return;
+      on = true;
+      stage.hidden = false;
+      build.classList.add('build--stage');
+      measure();
+      setState(items[0].dataset.shape);
+    };
+    const io = new IntersectionObserver((entries) => {
+      for (const en of entries) if (en.isIntersecting && on) setState(en.target.dataset.shape);
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    items.forEach((it) => io.observe(it));
+    // pause the clip when the section is off screen
+    new IntersectionObserver(([en]) => {
+      if (!video) return;
+      if (en.isIntersecting && state === 'game') { const p = video.play(); if (p && p.catch) p.catch(() => {}); } else video.pause();
+    }).observe(stage);
+    // the phone shows the app you point at; otherwise the two apps take turns
+    const phone = layers.phone;
+    let appIdx = 0, appHold = 0;
+    const showApp = (name) => { if (phone) phone.dataset.app = name; };
+    build.querySelectorAll('[data-app]').forEach((a) => {
+      const pick = () => { showApp(a.dataset.app); appHold = performance.now() + 4000; };
+      a.addEventListener('pointerenter', pick);
+      a.addEventListener('focus', pick);
+    });
+    let appNext = 0;
+    onTick((now) => {
+      if (!on || state !== 'phone' || now < appHold) return;
+      if (now > appNext) {
+        if (appNext) { appIdx = 1 - appIdx; showApp(appIdx ? 'nanieh' : 'sarfi'); }
+        appNext = now + 3200;
+      }
+    });
+    let rz2;
+    window.addEventListener('resize', () => { clearTimeout(rz2); rz2 = setTimeout(() => { if (on) measure(); }, 150); }, { passive: true });
+    wide.addEventListener('change', () => {
+      if (wide.matches) enable();
+      else if (on) { on = false; stage.hidden = true; build.classList.remove('build--stage'); if (video) video.pause(); }
+    });
+    enable();
+  }
 })();

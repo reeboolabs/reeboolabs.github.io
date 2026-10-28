@@ -10,6 +10,10 @@ Static GitHub Pages site for REEBOO Labs.
 | `/assets/` | CSS, JS, self-hosted Outfit font (OFL, `assets/fonts/OFL.txt`), brand images, pack covers (our own itch.io cover art, webp) |
 | `/assets/img/og-home.png` | Link preview image for the home page (1200 x 630) |
 | `/assets/media/oho/` | Oho, our mascot: short muted clips (MP4 + WebM) and WebP stills, built by `../tools/build_oho_media.py` from the approved flat clips in `B:/Projects/REEBOO Mascot`. Played by `/assets/js/oho.js` (never under reduced motion) |
+| `/assets/js/field.js` | The interactive hero grid (WebGL): pointer light, click/tap effects, effect tray, optional sound. Off under reduced motion, Save-Data, without WebGL or on slow devices |
+| `/assets/media/fx/` | `vfx-loop-640.mp4` (9.5 s muted loop cut from our Stylized VFX Pack trailer, captions cropped out) and its poster, for the Custom work stage |
+| `/assets/media/sfx/` | Four short MP3s from our Sci-Fi & Magic Combat SFX free sample, played by the hero only after the visitor turns Sound on |
+| `/assets/img/apps/` | Sarfi and Nanieh screenshots (from their Android builds) and a screenshot of this site's hero, for Custom work |
 | `/sarfi/`, `/nanieh/` | App home and privacy pages. Do not change |
 | `/google81c1f74d41483d65.html` | Search Console verification. Keep |
 | `robots.txt`, `sitemap.xml`, `site.webmanifest`, `CNAME` | Crawling, install and domain files |
@@ -35,5 +39,5 @@ Store links use **https://reeboolabs.itch.io/<slug>**.
 - GSAP 3.15.0 + ScrollTrigger (GreenSock standard no-charge licence) and Lenis 1.3.26 (MIT), from jsDelivr with exact
   versions and SRI hashes. Lenis CSS rules are inlined in `assets/css/site.css`.
 - Oho clips are our own files on our own domain (CSP `media-src 'self'`); nothing is loaded from a third party for them.
-- No trackers, cookies, forms or analytics. CSP and referrer policy are set by meta tags (GitHub Pages cannot send
+- No trackers, cookies, forms or analytics. The hero stores one `sessionStorage` flag (`reeboo-boot`) so its intro wave plays once per tab. CSP and referrer policy are set by meta tags (GitHub Pages cannot send
   headers, so `frame-ancestors`, HSTS and `X-Content-Type-Options` cannot be set from here).
