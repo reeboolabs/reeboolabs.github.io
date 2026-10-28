@@ -9,6 +9,7 @@ Static GitHub Pages site for REEBOO Labs.
 | `/404.html` | Designed 404 (GitHub Pages serves it for missing paths) |
 | `/assets/` | CSS, JS, self-hosted Outfit font (OFL, `assets/fonts/OFL.txt`), brand images, pack covers (our own itch.io cover art, webp) |
 | `/assets/img/og-home.png` | Link preview image for the home page (1200 x 630) |
+| `/assets/media/oho/` | Oho, our mascot: short muted clips (MP4 + WebM) and WebP stills, built by `../tools/build_oho_media.py` from the approved flat clips in `B:/Projects/REEBOO Mascot`. Played by `/assets/js/oho.js` (never under reduced motion) |
 | `/sarfi/`, `/nanieh/` | App home and privacy pages. Do not change |
 | `/google81c1f74d41483d65.html` | Search Console verification. Keep |
 | `robots.txt`, `sitemap.xml`, `site.webmanifest`, `CNAME` | Crawling, install and domain files |
@@ -26,10 +27,13 @@ Store links use **https://reeboolabs.itch.io/<slug>**.
 - Pixel VFX Mega Pack launch sale ($6 until 2026-10-28): the sale line is in the HTML with `hidden` and is shown by JS
   only until 2026-10-28 23:59 Oman time. After that date, remove the sale line and set the Pixel VFX Mega Pack offer in
   the home page JSON-LD back to `"price":"12.00"` without `priceValidUntil`.
-- Pack and sample counts on the home page (40 packs, 40 free samples) were checked on reeboolabs.itch.io on 2026-10-23.
+- Pack and sample counts on the home page (44 packs with a free sample, 2 starter templates with a browser demo, the Game Dev
+  Mega Kit; 46 rows in Free samples) were checked on reeboolabs.itch.io on 2026-10-28. Several packs were on a 20% sale
+  that day; the cards show the regular price.
 
 ## Third-party code
 - GSAP 3.15.0 + ScrollTrigger (GreenSock standard no-charge licence) and Lenis 1.3.26 (MIT), from jsDelivr with exact
   versions and SRI hashes. Lenis CSS rules are inlined in `assets/css/site.css`.
+- Oho clips are our own files on our own domain (CSP `media-src 'self'`); nothing is loaded from a third party for them.
 - No trackers, cookies, forms or analytics. CSP and referrer policy are set by meta tags (GitHub Pages cannot send
   headers, so `frame-ancestors`, HSTS and `X-Content-Type-Options` cannot be set from here).
