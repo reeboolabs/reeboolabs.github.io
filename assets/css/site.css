@@ -672,18 +672,23 @@ html.field-on .hero__copy, html.field-on .fx-tray { cursor: auto; }
   font: 500 0.875rem/1 var(--font); cursor: pointer;
   transition: border-color 160ms steps(2, end), background-color 160ms steps(2, end), translate 120ms var(--ease);
 }
-.fx-chip:hover, .fx-sound:hover, .fx-chip:focus-visible, .fx-sound:focus-visible { border-color: var(--cream); }
+/* hover floods the chip cream in pixel steps, like the main buttons; the cell turns red */
+.fx-chip, .fx-sound { box-shadow: inset 0 0 0 0 var(--cream); }
+.fx-chip:hover, .fx-sound:hover, .fx-chip:focus-visible, .fx-sound:focus-visible {
+  border-color: var(--cream); color: var(--ink); background-color: var(--cream); box-shadow: inset 0 -48px 0 0 var(--cream);
+  transition: box-shadow 160ms steps(4, end), color 0ms linear 80ms, background-color 0ms linear 160ms, border-color 160ms steps(2, end), translate 120ms var(--ease);
+}
 .fx-chip:active, .fx-sound:active { translate: 0 1px; }
 .fx-chip__cell { width: 8px; height: 8px; border-radius: 2px; background: var(--n-700); transition: background-color 0ms linear 80ms, translate 160ms steps(2, end); }
 .fx-chip:hover .fx-chip__cell, .fx-chip:focus-visible .fx-chip__cell { translate: 0 -2px; background: var(--red); }
-.fx-chip[aria-pressed="true"] { border-color: var(--cream); background: var(--n-850); }
+.fx-chip[aria-pressed="true"]:not(:hover):not(:focus-visible) { border-color: var(--cream); background: var(--n-850); }
 .fx-chip[aria-pressed="true"] .fx-chip__cell { background: var(--red); }
 .fx-sound__icon { width: 18px; height: 14px; flex: none; }
 .fx-sound__wave { opacity: 0.28; transition: opacity 0ms linear 80ms; }
 .fx-sound:hover .fx-sound__wave, .fx-sound:focus-visible .fx-sound__wave { opacity: 0.7; }
 .fx-sound:hover .fx-sound__icon, .fx-sound:focus-visible .fx-sound__icon { translate: 2px 0; }
 .fx-sound__icon { transition: translate 160ms steps(2, end); }
-.fx-sound[aria-pressed="true"] { border-color: var(--cream); background: var(--n-850); }
+.fx-sound[aria-pressed="true"]:not(:hover):not(:focus-visible) { border-color: var(--cream); background: var(--n-850); }
 .fx-sound[aria-pressed="true"] .fx-sound__wave { opacity: 1; fill: var(--red); }
 
 /* ---------- Custom work: what we build (2026-10-28 v2) ---------- */
