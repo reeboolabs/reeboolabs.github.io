@@ -5,6 +5,7 @@ Static GitHub Pages site for REEBOO Labs.
 | Path | What |
 |---|---|
 | `/index.html` | Company home page. Edited by hand since 2026-10-21 (the first version came from `../tools/build_site.py`, which is now out of date; do not re-run it without porting the changes) |
+| `/audio/`, `/vfx/`, `/pixel/` | Our work: one page per skill with 6 real samples from our packs, each with its own anchor (for example `/audio/#monster-growls`) so a pitch can link one sample. Written by `../tools/build_portfolio_pages.py` (copy and sample data live there; header and footer are copied from the Mega Kit page). Media in `/assets/media/work/` and link previews in `/assets/img/work/` come from `../tools/build_portfolio_media.py` (sources, sizes and loudness in `../docs/portfolio_media.json`). Styles `assets/css/work.css`, script `assets/js/work.js` |
 | `/game-dev-mega-kit/` | Game Dev Mega Kit showcase page (from `../tools/mega_kit_page.tpl.html` + `../tools/build_mega_kit_page.py`) |
 | `/404.html` | Designed 404 (GitHub Pages serves it for missing paths) |
 | `/assets/` | CSS, JS, self-hosted Outfit font (OFL, `assets/fonts/OFL.txt`), brand images, pack covers (our own itch.io cover art, webp) |
